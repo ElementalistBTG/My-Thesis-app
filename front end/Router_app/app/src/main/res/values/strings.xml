@@ -1,0 +1,28 @@
+<resources>
+    <!-- Textview for SplashActivity -->
+    <string name="splash_screen_text">Made by Konstantinos Michelis</string>
+
+    <string name="app_name">Router_app</string>
+    <string name="welcome_textview">Welcome to my Thesis app</string>
+    <string name="login_button">Press to register/login</string>
+    <string name="instructions_textview">Insert URL to continue with registration</string>
+    <string name="url_edittext">personal-database-url</string>
+    <string name="url_stored">key</string>
+    <string name="photographer_button">Photographer</string>
+    <string name="explorer_button">explorer</string>
+    <string name="question_textview">Are you a photographer or an explorer?</string>
+    <string name="retake_photo_button">Re-photo</string>
+    <string name="pick_wifi_button">Pick Wifi</string>
+    <string name="upload_button">Upload</string>
+    <!-- Textviews for WifiNetworks -->
+    <string name="wifi_instructions_view">Select the access point that you took photo</string>
+    <string name="wi_fi_stats">Wi-Fi Access Points</string>
+    <string name="connected_wifi_textview">User connected to this wifi: <font color ="#01C6DB">%1$s</font></string>
+    <string name="explore_button">Bring me the closest router image (via GPS)</string>
+    <string name="similarity_button_text">Bring me the router with the best match</string>
+    <!-- Textviews for Gps navigate -->
+    <string name="textview_distance_to_router">Distance to router: %1$f</string>
+    <!-- Image description -->
+    <string name="image_content_description">Router</string>
+
+</resources>

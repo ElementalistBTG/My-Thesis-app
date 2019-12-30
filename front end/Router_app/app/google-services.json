@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "48883381009",
+    "firebase_url": "https://routerapp-f254c.firebaseio.com",
+    "project_id": "routerapp-f254c",
+    "storage_bucket": "routerapp-f254c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48883381009:android:e8cd5ce4805f2900d3d2b0",
+        "android_client_info": {
+          "package_name": "com.example.router_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48883381009-fr1gg3p7486ndko8d459i06svf35q1p3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.router_app",
+            "certificate_hash": "92a8484256e5d6952a3fd3342e139fd604b3ba90"
+          }
+        },
+        {
+          "client_id": "48883381009-qq07r4cn5j1unmargo692t05jnh1kmcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVo1t4drUFPK_jkOO6mttzj8ffFaOD8Hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48883381009-qq07r4cn5j1unmargo692t05jnh1kmcc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
