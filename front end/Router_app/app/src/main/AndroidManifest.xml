@@ -32,7 +32,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
@@ -42,9 +43,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".PhotographerActivity" />
-        <activity android:name=".ExplorerActivity" />
-        <activity android:name=".WifiNetworksActivity"/>
+        <activity android:name=".PhotographerActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ExplorerActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".WifiNetworksActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:screenOrientation="portrait"/>
         <activity android:name=".GPSNavigateActivity"/>
         <activity android:name=".LoginScreenActivity"/>
 

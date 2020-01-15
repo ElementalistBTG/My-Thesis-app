@@ -2,6 +2,7 @@ package com.example.router_app
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -24,7 +25,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.os.postDelayed
 import com.android.volley.ParseError
 import com.android.volley.Request
 import com.android.volley.Response
@@ -36,11 +36,23 @@ import com.example.router_app.Helper.Wifi
 import com.google.android.gms.location.*
 import com.google.ar.core.ArCoreApk
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.clearCache
 import kotlinx.android.synthetic.main.activity_explorer.*
-import kotlinx.android.synthetic.main.parameters_popup.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.ArrayList
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.Map
+import kotlin.collections.MutableSet
+import kotlin.collections.average
+import kotlin.collections.forEach
+import kotlin.collections.groupBy
+import kotlin.collections.isNotEmpty
+import kotlin.collections.map
+import kotlin.collections.mutableListOf
+import kotlin.collections.mutableMapOf
+import kotlin.collections.mutableSetOf
+import kotlin.collections.set
 
 /**
  * Class for letting the user find either the closest router to him or the one with the best match from the data he has from the wifis/cells
@@ -83,6 +95,8 @@ class ExplorerActivity : AppCompatActivity() {
     private var cellCounter = 0
     private var wifiCounter = 0
     private var receiverTriggeredCounter = 0
+    //progress dialog
+    private lateinit var progressDialog : ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +104,8 @@ class ExplorerActivity : AppCompatActivity() {
         //get intent values
         userId = intent.getStringExtra("userId")
         //initialize variables
+        progressDialog = ProgressDialog(this)
+
         telephonyManager =
             applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -195,17 +211,23 @@ class ExplorerActivity : AppCompatActivity() {
     }
 
     private fun similarityButtonPressed() {
-        Toast.makeText(this, "Gathering data...", Toast.LENGTH_SHORT).show()
         //zerorise the values
         explore_button.isEnabled = false
         cellCounter = 0
         wifiCounter = 0
         receiverTriggeredCounter = 0
+        progressDialog.setCancelable(false)
+        progressDialog.setTitle("Similarity matching enabled")
+        progressDialog.setMessage("Gathering data from signals...")
+        progressDialog.show()
         gatherWifiCellData()
     }
 
     private fun locationButtonPressed() {
-        Toast.makeText(this, "Gathering GPS data...", Toast.LENGTH_SHORT).show()
+        progressDialog.setCancelable(false)
+        progressDialog.setTitle("GPS matching enabled")
+        progressDialog.setMessage("Gathering location data...")
+        progressDialog.show()
         //gather GPS data and make a get request
         similarity_button.isEnabled = false
         if (!userLocation.latitude.equals(0f)) {
@@ -214,12 +236,14 @@ class ExplorerActivity : AppCompatActivity() {
             Toast.makeText(this, "GPS data not available, try again later", Toast.LENGTH_SHORT)
                 .show()
             similarity_button.isEnabled = true
+            progressDialog.dismiss()
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun volleyGPSRequest() {
-        Toast.makeText(this, "Getting nearest router...", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "Getting nearest router...", Toast.LENGTH_SHORT).show()
+        progressDialog.setMessage("Uploading data...")
         val url =
             "http://" + mApp.IPaddress + "/JavaWebApp_war/gps?longitude=${userLocation.longitude}&latitude=${userLocation.latitude}"
         val queue = Volley.newRequestQueue(this)
@@ -238,14 +262,17 @@ class ExplorerActivity : AppCompatActivity() {
                         )}"
                     )
                     similarity_button.isEnabled = true
+                    progressDialog.dismiss()
                     if(jsonObjectResponse.get("image_url").toString().equals("no image")){
                         bssid_textView.text = "No router available at close distance"
                     }else{
+                        Picasso.get().clearCache()
                         Picasso.get().load(jsonObjectResponse.get("image_url").toString())
                             .into(explore_imageView)
                         bssid_textView.text = "Bssid: ${jsonObjectResponse.get("bssid")}"
                         //if the phone supports AR then create a live view
-                        if (ArCoreApk.Availability.SUPPORTED_INSTALLED.isSupported) {
+                        val arAvailability = ArCoreApk.getInstance().checkAvailability(this)
+                        if (arAvailability == ArCoreApk.Availability.SUPPORTED_INSTALLED) {
                             val intent = Intent(this, GPSNavigateActivity::class.java)
                             intent.putExtra("bssid", jsonObjectResponse.get("bssid").toString())
                             intent.putExtra("imageUrl", jsonObjectResponse.get("image_url").toString())
@@ -259,6 +286,7 @@ class ExplorerActivity : AppCompatActivity() {
                 },
                 Response.ErrorListener {
                     similarity_button.isEnabled = true
+                    progressDialog.dismiss()
                     Log.d(tag, "got error response: $it")
                     Toast.makeText(this, "Couldn't retrieve image", Toast.LENGTH_SHORT).show()
                 })
@@ -309,12 +337,15 @@ class ExplorerActivity : AppCompatActivity() {
                         )}"
                     )
                     explore_button.isEnabled = true
+                    progressDialog.dismiss()
                     if(jsonObjectResponse.get("image_url")=="No URL available"){
                         bssid_textView.text = "There is no router to match your data."
                         explore_imageView.setImageResource(R.drawable.icon_my_launcher)
                         Toast.makeText(this,"No wifi or cell tower common in your area to run similarity matching",Toast.LENGTH_LONG).show()
                     }else{
-                        Picasso.get().load(jsonObjectResponse.get("image_url").toString())
+                        Picasso.get().clearCache()
+                        Picasso.get()
+                            .load(jsonObjectResponse.get("image_url").toString())
                             .into(explore_imageView)
                         bssid_textView.text = "Bssid: ${jsonObjectResponse.get("bssid")}"
                     }
@@ -322,6 +353,7 @@ class ExplorerActivity : AppCompatActivity() {
                 },
                 Response.ErrorListener { error ->
                     explore_button.isEnabled = true
+                    progressDialog.dismiss()
                     if(error is ParseError){
                         bssid_textView.text = "There is no router to match your data."
                         explore_imageView.setImageResource(R.drawable.icon_my_launcher)

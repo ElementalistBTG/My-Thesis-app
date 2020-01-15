@@ -27,6 +27,7 @@ import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.clearCache
 import kotlinx.android.synthetic.main.activity_gps_navigate.*
 import kotlinx.android.synthetic.main.location_layout_renderable.view.*
 import uk.co.appoly.arcorelocation.LocationMarker
@@ -68,6 +69,7 @@ class GPSNavigateActivity : AppCompatActivity() {
         routerLatitude = intent.getDoubleExtra("latitude", 0.0)
         routerLongitude = intent.getDoubleExtra("longitude", 0.0)
         frame_bssid.text = intent.getStringExtra("bssid")
+        Picasso.get().clearCache()
         Picasso.get().load(intent.getStringExtra("imageUrl"))
             .into(gps_imageView)
 

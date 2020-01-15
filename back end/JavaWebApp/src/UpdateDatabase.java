@@ -12,6 +12,7 @@ import javax.servlet.ServletContext;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -313,8 +314,13 @@ class UpdateDatabase {
                         String k = entry.getKey();//the id that we did the grouping
                         List<Cell> v = entry.getValue();//the whole cell object
 
-                        //compute metric here
-                        //average
+                        /***
+                         * compute metric here
+                         */
+
+                        /***
+                         * compute average and keep this value
+                         */
                         int averagePower = 0;
                         for (Cell cell : v) {
                             averagePower += cell.getPower();
@@ -324,6 +330,39 @@ class UpdateDatabase {
                         newAggregatedCell.setId(k);
                         newAggregatedCell.setPower(averagePower);
                         newCellObject.add(newAggregatedCell);
+
+
+                        /***
+                         * compute median
+                         * then dismiss all values with 20db distance
+                         * and then compute average
+                         */
+                        /*
+                        int median;
+                        int[] powerArray = new int[v.size()];
+                        for (int i=0;i<=v.size();i++) {
+                            powerArray[i] = v.get(i).getPower();
+                        }
+                        Arrays.sort(powerArray);
+                        if(powerArray.length % 2 ==0){
+                            median = (powerArray[powerArray.length/2] + powerArray[powerArray.length/2 -1]) /2;
+                        }else{
+                            median = powerArray[powerArray.length/2];
+                        }
+                        int averagePower = 0;
+                        for (Cell cell : v) {
+                            if( (cell.getPower()<median+20) || (cell.getPower()>median-20) ){
+                                averagePower += cell.getPower();
+                            }
+                        }
+                        averagePower = averagePower / v.size();
+                        Cell newAggregatedCell = new Cell();
+                        newAggregatedCell.setId(k);
+                        newAggregatedCell.setPower(averagePower);
+                        newCellObject.add(newAggregatedCell);
+                         */
+
+
                     }
                     //we now have an arraylist of Cells with new values (average here)
                     //we store them to the JSON array myCellJSONArray
