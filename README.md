@@ -26,3 +26,6 @@ The main server runs at a local machine with XAMPP installed (including phpmyadm
 
 For example i had the the following databases "https://homedatabase2-4b1c.restdb.io" and "https://homedatabase-060e.restdb.io/" and in the login screen of the app i typed the following "https://homedatabase2-4b1c.restdb.io/media?&apikey=5dd0fa8964e7774913b6ed97" or "https://homedatabase-060e.restdb.io/media?&apikey=5dc5641764e7774913b6ea76".
 There is always a default url but it may not work in the future so make sure you have created your own online repository. These repositories need to have an apikey with access to methods GET,POST
+
+For a tutorial of using the app see the video below:
+https://youtu.be/MCIE3K3IjZs
