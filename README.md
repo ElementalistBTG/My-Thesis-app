@@ -1,5 +1,5 @@
 # My-Thesis-app
-## My thesis app regarding photographing and storing routers in indoor places and then finding them
+## With this system you can photograph a point of interest and then find it using wifi and cellular signals via its fingerprint
 
 This repository consists of a front end which is an android app and a backend which needs to be set up in a local machine and using an online repository. Instructions below:
 
